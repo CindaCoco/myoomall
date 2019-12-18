@@ -15,7 +15,6 @@ import xmu.yida.topic.util.ResponseUtil;
  */
 
 @RestController
-@RequestMapping("/topics")
 public class TopicController {
 
     private static final String ADSERVICEURL="http://ADSERVICE";
@@ -38,7 +37,7 @@ public class TopicController {
      * @param limit 分页大小
      * @return 专题列表
      */
-    @GetMapping("")
+    @GetMapping("/topics")
     public Object list(@RequestParam(defaultValue = "1",name = "page") Integer page,
                        @RequestParam(defaultValue = "10",name = "limit") Integer limit){
         return ResponseUtil.ok(topicService.getAllTopics(page,limit));
@@ -50,7 +49,7 @@ public class TopicController {
      * @param id 专题ID
      * @return 专题详情
      */
-    @GetMapping("/{id}")
+    @GetMapping("/topics/{id}")
     public Object detail(@PathVariable Integer id){
         Topic topic=topicService.getTopicById(id);
         if(topic==null){
@@ -60,7 +59,7 @@ public class TopicController {
         }
     }
 
-    @PostMapping("")
+    @PostMapping("/topics")
     public Object create(@RequestBody Topic topic) {
         Topic retTopic=topicService.addTopic(topic);
         if(retTopic==null){
@@ -69,7 +68,7 @@ public class TopicController {
             return ResponseUtil.ok(topic);
         }
     }
-    @PutMapping("/{id}")
+    @PutMapping("/topics/{id}")
     public Object update(@RequestBody Topic topic,@PathVariable Integer id) {
         if(topic.getGmtCreate()==null&&topic.getGmtModified()==null){
             topic.setId(id);
@@ -84,7 +83,7 @@ public class TopicController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/topics/{id}")
     public Object delete(@PathVariable Integer id) {
         boolean result=topicService.deleteTopicById(id);
         if(result){
@@ -96,9 +95,6 @@ public class TopicController {
 
     @GetMapping("/test")
     public Object hello(){
-        /*String result=restTemplate.getForObject(ADSERVICEURL+"/ads/1",String.class);
-        JSON json= (JSON) JSON.parseObject(result).get("data");
-        return JSON.toJavaObject(json, Ad.class);*/
         return adClientService.getAds();
     }
 

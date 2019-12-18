@@ -106,5 +106,9 @@ public class ResponseUtil {
     public static Object unauthz() {
         return fail(506, "无操作权限");
     }
+
+    public static Object clientShutdown(){
+        return fail(507,"服务已关闭");
+    }
 }
 

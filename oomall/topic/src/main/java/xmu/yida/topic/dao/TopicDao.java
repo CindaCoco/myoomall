@@ -81,12 +81,16 @@ public class TopicDao {
         Topic topic=new Topic();
         Copyer.Copy(topicPO,topic);
         String urlList=topicPO.getPicUrlList();
-        JSONArray jsonArray=JSON.parseArray(urlList);
-        List<String> pictures=new ArrayList<>();
-        for(int i=0;i<jsonArray.size();i++){
-            pictures.add(jsonArray.get(i).toString());
+
+        System.out.println(urlList);
+        if(urlList!=null){
+            JSONArray jsonArray=JSON.parseArray(urlList);
+            List<String> pictures=new ArrayList<>();
+            for(int i=0;i<jsonArray.size();i++){
+                pictures.add(jsonArray.get(i).toString());
+            }
+            topic.setPictures(pictures);
         }
-        topic.setPictures(pictures);
         return topic;
     }
 

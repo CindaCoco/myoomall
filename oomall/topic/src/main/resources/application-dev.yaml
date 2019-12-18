@@ -16,7 +16,7 @@ spring:
       max-wait-millis: 200 #等待连接获取的最大超时时间
 
 mybatis:
-  mapper-locations: classpath:mybatis/mapper/*.xml
+  mapper-locations: classpath:mapper/*.xml
   type-aliases-package: xmu.yida.topic.domain
   configuration:
     #自动将SQL中查出来的带下划线的字段，转换为驼峰标志，再去匹配类中的属性
@@ -41,3 +41,7 @@ info:
   author: LYD
   build.artifactId: @project.artifactId@
   build.version: @project.version@
+
+feign:
+  hystrix:
+    enabled: true

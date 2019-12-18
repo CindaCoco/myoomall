@@ -5,11 +5,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import xmu.yida.topic.controller.fallback.AdClientServiceFallbackFactory;
 
 /**
  * @author LYD
  */
-@FeignClient(value="ADSERVICE")
+@FeignClient(value="ADSERVICE",fallbackFactory = AdClientServiceFallbackFactory.class)
 public interface AdClientService {
     @RequestMapping(value="/ads",method = RequestMethod.GET)
     public Object getAds();
