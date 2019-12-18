@@ -1,0 +1,43 @@
+server:
+  port: 8001
+
+spring:
+  application:
+    name: topicService
+  datasource:
+    username: ooadUser
+    password: root
+    url: jdbc:mysql://localhost:3306/oomal?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    dbcp2:
+      min-idle: 5 #数据库连接池的最小维持连接数
+      initial-size: 5 #初始化连接数
+      max-total: 5 #最大连接数
+      max-wait-millis: 200 #等待连接获取的最大超时时间
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: xmu.yida.topic.domain
+  configuration:
+    #自动将SQL中查出来的带下划线的字段，转换为驼峰标志，再去匹配类中的属性
+    map-underscore-to-camel-case: true
+#showSql
+logging:
+  level:
+    com:
+      example:
+        mapper : debug
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://handsomeyida.xyz:8761/eureka
+  instance:
+    instance-id: topicService8001
+    prefer-ip-address: true
+info:
+  app.name: topicService
+  company.name: XMU
+  author: LYD
+  build.artifactId: @project.artifactId@
+  build.version: @project.version@

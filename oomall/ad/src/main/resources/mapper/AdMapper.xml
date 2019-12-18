@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xmu.yida.ad.mapper.AdMapper">
+    <resultMap id="adMap" type="Ad" autoMapping="true">
+        <id property="id" column="id"/>
+        <result column="is_default" jdbcType="TINYINT" property="beDefault"/>
+        <result column="is_enabled"  jdbcType="TINYINT" property="beEnabled"/>
+        <result column="is_deleted" jdbcType="TINYINT" property="beDeleted"/>
+    </resultMap>
+
+    <insert id="addAd" parameterType="Ad" keyProperty="id" useGeneratedKeys="true" keyColumn="id">
+        insert into `ad`(link,name,content,pic_url,is_default,is_enabled,start_time,end_time,gmt_create,gmt_modified)
+        values
+        (#{link},#{name},#{content},#{picUrl},#{beDefault},#{beEnabled},#{startTime},#{endTime},current_time ,current_time)
+    </insert>
+
+    <select id="findAdById" resultMap="adMap" parameterType="Integer">
+        select id,
+                link,
+                name,
+                content,
+                pic_url,
+                is_default,
+                is_enabled,
+                start_time,
+                end_time,
+                gmt_create,
+                gmt_modified,
+                is_deleted
+        from `ad` where id = #{id} and is_deleted=0
+    </select>
+
+    <select id="findAllAds" resultMap="adMap">
+        select id,
+                link,
+                name,
+                content,
+                pic_url,
+                is_default,
+                is_enabled,
+                start_time,
+                end_time,
+                gmt_create,
+                gmt_modified,
+                is_deleted
+        from `ad` where is_deleted=0
+    </select>
+
+    <update id="deleteAdById" parameterType="Integer">
+        update `ad` set is_deleted=1,gmt_modified=current_time where id=#{id}
+    </update>
+    
+    <update id="updateAd" parameterType="Ad">
+        update `ad`
+        <set>
+            <if test="link!=null">link=#{link},</if>
+            <if test="name!=null">name=#{name},</if>
+            <if test="content!=null">content=#{content},</if>
+            <if test="picUrl!=null">pic_url=#{picUrl},</if>
+            <if test="beDefault!=null">is_default=#{beDefault},</if>
+            <if test="beEnabled!=null">is_enabled=#{beEnabled},</if>
+            <if test="startTime!=null">start_time=#{startTime},</if>
+            <if test="endTime!=null">end_time=#{endTime},</if>
+            <if test="beDeleted!=null">is_deleted=#{beDeleted},</if>
+            gmt_modified=current_time
+        </set>
+        where id=#{id}
+    </update>
+</mapper>
