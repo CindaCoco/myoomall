@@ -26,7 +26,7 @@ eureka:
     service-url:
       defaultZone: http://handsomeyida.xyz:8761/eureka
   instance:
-    instance-id: adService8002
+    instance-id: adService8002-hystrix
     prefer-ip-address: true
 
 info:

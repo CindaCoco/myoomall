@@ -1,5 +1,6 @@
 package xmu.yida.ad.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xmu.yida.ad.domain.Ad;
@@ -32,6 +33,7 @@ public class AdController {
             return ResponseUtil.ok(retAd);
         }
     }
+    @HystrixCommand(fallbackMethod = "processHystrixId")
     @GetMapping("/ads/{id}")
     public Object adminFindAdById(@PathVariable Integer id){
         Ad retAd=adService.getAdById(id);
@@ -69,5 +71,10 @@ public class AdController {
     public Object userFindAdList(@RequestParam(defaultValue = "1") Integer page,
                                  @RequestParam(defaultValue = "10") Integer limit){
         return ResponseUtil.ok(adService.getAllAds(page,limit));
+    }
+
+
+    public Object processHystrixId(@PathVariable Integer id){
+        return ResponseUtil.timeOut();
     }
 }

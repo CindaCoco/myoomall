@@ -67,6 +67,14 @@ public class ResponseUtil {
         return obj;
     }
 
+    public static Object fail(int errno, String errmsg, Object data) {
+        Map<String, Object> obj = new HashMap<String, Object>();
+        obj.put("errno", errno);
+        obj.put("errmsg", errmsg);
+        obj.put("data",data);
+        return obj;
+    }
+
     public static Object badArgument() {
         return fail(401, "参数不对");
     }
@@ -77,6 +85,14 @@ public class ResponseUtil {
 
     public static Object notFound(){
         return fail(404,"资源不存在");
+    }
+
+    public static Object notFound(Object object){
+        return fail(404,"资源不存在",object);
+    }
+
+    public static Object timeOut(){
+        return fail(408,"请求超时");
     }
 
     public static Object createFailed(){

@@ -33,7 +33,7 @@ eureka:
     service-url:
       defaultZone: http://handsomeyida.xyz:8761/eureka
   instance:
-    instance-id: topicService8001
+    instance-id: topicService8001-hystrix
     prefer-ip-address: true
 info:
   app.name: topicService
