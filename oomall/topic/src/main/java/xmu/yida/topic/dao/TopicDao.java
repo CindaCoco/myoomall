@@ -29,7 +29,7 @@ public class TopicDao {
         if(topicMapper.addTopic(topic)){
             Integer id=topic.getId();
             TopicPO topicPO=topicMapper.findTopicById(id);
-            return topic(topicPO);
+            return new Topic(topicPO);
         }else{
             return null;
         }
@@ -37,7 +37,7 @@ public class TopicDao {
 
     public Topic findTopicById(Integer id){
         TopicPO topicPO = topicMapper.findTopicById(id);
-        return topic(topicPO);
+        return new Topic(topicPO);
     }
 
     public List<Topic> findAllTopics(Integer page,Integer limit){
@@ -57,7 +57,7 @@ public class TopicDao {
         }
         if(topicMapper.updateTopic(topic)){
             TopicPO topicPO=topicMapper.findTopicById(topic.getId());
-            return topic(topicPO);
+            return new Topic(topicPO);
         }else{
             return null;
         }
@@ -69,31 +69,10 @@ public class TopicDao {
         }
         List<Topic> topicList=new ArrayList<>();
         for(TopicPO topicPO:topicPOList){
-            topicList.add(topic(topicPO));
+            topicList.add(new Topic(topicPO));
         }
         return topicList;
     }
-
-    private Topic topic(TopicPO topicPO){
-        if(topicPO==null){
-            return null;
-        }
-        Topic topic=new Topic();
-        Copyer.Copy(topicPO,topic);
-        String urlList=topicPO.getPicUrlList();
-
-        System.out.println(urlList);
-        if(urlList!=null){
-            JSONArray jsonArray=JSON.parseArray(urlList);
-            List<String> pictures=new ArrayList<>();
-            for(int i=0;i<jsonArray.size();i++){
-                pictures.add(jsonArray.get(i).toString());
-            }
-            topic.setPictures(pictures);
-        }
-        return topic;
-    }
-
 
     private boolean isArgsInvalid(TopicPO topicPO){
         if(topicPO.getBeDeleted()){
