@@ -44,6 +44,13 @@ public class TopicDao {
     }
 
     public boolean deleteTopicById(Integer id){
+        TopicPO topicPO=topicMapper.findTopicById(id);
+        if(topicPO==null){
+            return false;
+        }
+        if(topicPO.getBeDeleted()){
+            return false;
+        }
         return topicMapper.deleteTopicById(id);
     }
 
