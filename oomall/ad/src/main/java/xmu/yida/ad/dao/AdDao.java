@@ -41,6 +41,13 @@ public class AdDao {
     }
 
     public boolean deleteAdById(Integer id){
+        Ad ad=adMapper.findAdById(id);
+        if(ad==null){
+            return false;
+        }
+        if(ad.getBeDeleted()){
+            return false;
+        }
         return adMapper.deleteAdById(id);
     }
 
