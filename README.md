@@ -9,6 +9,9 @@ git push -u origin master
 
 ---
 
+## 12/19 新增监视流
+在微服务端新增依赖**spring-boot-starter-actuator**，spring2.x需要在主启动类定义bean，详情见代码。另外在我的服务器上搭建dashboard服务，地址为handsomeyida.xyz:9527/hystrix,可在这里可视化监视微服务调用情况
+
 ## 关于熔断器hystrix
 
 我负责的topic和ad模块其实是不太需要熔断机制的，加上熔断器只是为了springcloud的完整性。
