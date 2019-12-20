@@ -4,12 +4,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.Assert.*;
+
+import org.springframework.transaction.annotation.Transactional;
 import xmu.yida.ad.domain.Ad;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
+@Transactional
 class AdMapperTest {
 
     @Autowired
@@ -79,8 +82,7 @@ class AdMapperTest {
         if(adList.size()>0){
             Integer id=adList.get(0).getId();
             adMapper.updateAd(ad);
-            Ad updatedAd=adMapper.findAdById(id);
-            assertNotEquals("修改失败",adList.get(id),updatedAd);
+            assertNotEquals("修改失败",adList.get(0),ad);
         }
     }
 }

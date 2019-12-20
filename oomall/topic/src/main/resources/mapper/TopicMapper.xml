@@ -7,7 +7,7 @@
     </resultMap>
 
     <insert id="addTopic" parameterType="TopicPO" keyProperty="id" useGeneratedKeys="true" keyColumn="id">
-        insert into topic(pic_url_list,content,gmt_create,gmt_modified)
+        insert into `oomall_topic` (pic_url_list,content,gmt_create,gmt_modified)
         values
         (#{picUrlList},#{content},#{gmtCreate} ,#{gmtModified} )
     </insert>
@@ -19,7 +19,7 @@
                 is_deleted,
                 pic_url_list,
                 content
-        from `topic` where id = #{id}
+        from `oomall_topic` where id = #{id}
     </select>
 
     <select id="findAllTopics" resultMap="topicMap">
@@ -29,15 +29,15 @@
                 is_deleted,
                 pic_url_list,
                 content
-        from `topic` where is_deleted=0
+        from `oomall_topic` where is_deleted=0
     </select>
 
     <update id="deleteTopicById" parameterType="Integer">
-        update `topic` set is_deleted=1,gmt_modified=current_time where id=#{id}
+        update `oomall_topic` set is_deleted=1,gmt_modified=current_time where id=#{id}
     </update>
     
     <update id="updateTopic" parameterType="TopicPO">
-        update `topic`
+        update `oomall_topic`
         <set>
             <if test="picUrlList!=null">pic_url_list=#{picUrlList},</if>
             <if test="content!=null">content=#{content},</if>

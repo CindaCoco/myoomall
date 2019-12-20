@@ -7,6 +7,7 @@ import xmu.yida.ad.domain.Ad;
 import xmu.yida.ad.mapper.AdMapper;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -30,9 +31,13 @@ public class AdDao {
         return adMapper.findAdById(id);
     }
 
-    public List<Ad> findAllAds(Integer page,Integer limit){
+    public List<Ad> findAllAds(Integer page, Integer limit, HashMap<String,Object> map){
         PageHelper.startPage(page,limit);
-        return adMapper.findAllAds();
+        return adMapper.adminFindAllAds(map);
+    }
+
+    public List<Ad> userFindAds(){
+        return adMapper.userFindAllAds();
     }
 
     public boolean deleteAdById(Integer id){

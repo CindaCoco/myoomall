@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import xmu.yida.ad.dao.AdDao;
 import xmu.yida.ad.domain.Ad;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -16,8 +17,12 @@ public class AdService {
         return adDao.findAdById(id);
     }
 
-    public List<Ad> getAllAds(Integer page, Integer limit){
-        return adDao.findAllAds(page,limit);
+    public List<Ad> getAllAds(Integer page, Integer limit, HashMap<String,Object> map){
+        return adDao.findAllAds(page,limit,map);
+    }
+
+    public List<Ad> userGetAllAds(){
+        return adDao.userFindAds();
     }
 
     public Ad addAd(Ad ad){

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import xmu.yida.topic.domain.Topic;
 import xmu.yida.topic.domain.TopicPO;
 import xmu.yida.topic.mapper.TopicMapper;
-import xmu.yida.topic.util.Copyer;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

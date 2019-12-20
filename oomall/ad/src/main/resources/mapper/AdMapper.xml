@@ -9,7 +9,7 @@
     </resultMap>
 
     <insert id="addAd" parameterType="Ad" keyProperty="id" useGeneratedKeys="true" keyColumn="id">
-        insert into `ad`(link,name,content,pic_url,is_default,is_enabled,start_time,end_time,gmt_create,gmt_modified)
+        insert into `oomall_ad`(link,name,content,pic_url,is_default,is_enabled,start_time,end_time,gmt_create,gmt_modified)
         values
         (#{link},#{name},#{content},#{picUrl},#{beDefault},#{beEnabled},#{startTime},#{endTime},current_time ,current_time)
     </insert>
@@ -27,10 +27,10 @@
                 gmt_create,
                 gmt_modified,
                 is_deleted
-        from `ad` where id = #{id} and is_deleted=0
+        from `oomall_ad` where id = #{id} and is_deleted=0
     </select>
 
-    <select id="findAllAds" resultMap="adMap">
+    <select id="userFindAllAds" resultMap="adMap">
         select id,
                 link,
                 name,
@@ -43,15 +43,36 @@
                 gmt_create,
                 gmt_modified,
                 is_deleted
-        from `ad` where is_deleted=0
+        from `oomall_ad` where is_deleted=0 and is_enabled=1
+    </select>
+
+    <select id="adminFindAllAds" resultMap="adMap" parameterType="Map">
+        select id,
+                link,
+                name,
+                content,
+                pic_url,
+                is_default,
+                is_enabled,
+                start_time,
+                end_time,
+                gmt_create,
+                gmt_modified,
+                is_deleted
+        from `oomall_ad`
+        <where>
+            <if test="true">is_deleted=0</if>
+            <if test="name != null">and name = #{name}</if>
+            <if test="content!=null">and contend=#{content}</if>
+        </where>
     </select>
 
     <update id="deleteAdById" parameterType="Integer">
-        update `ad` set is_deleted=1,gmt_modified=current_time where id=#{id}
+        update `oomall_ad` set is_deleted=1,gmt_modified=current_time where id=#{id}
     </update>
     
     <update id="updateAd" parameterType="Ad">
-        update `ad`
+        update `oomall_ad`
         <set>
             <if test="link!=null">link=#{link},</if>
             <if test="name!=null">name=#{name},</if>

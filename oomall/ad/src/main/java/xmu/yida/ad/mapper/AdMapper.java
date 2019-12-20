@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 import xmu.yida.ad.domain.Ad;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Mapper
@@ -26,7 +27,14 @@ public interface AdMapper {
      * 查找所有Ad
      * @return list
      */
-    List<Ad> findAllAds();
+    List<Ad> userFindAllAds();
+
+    /**
+     * 通过name和content全字查找结果
+     * @param map 包含name和content
+     * @return list
+     */
+    List<Ad> adminFindAllAds(HashMap<String,Object> map);
 
     /**
      * 通过id删除广告

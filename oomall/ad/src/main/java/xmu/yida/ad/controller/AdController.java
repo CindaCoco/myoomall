@@ -7,6 +7,8 @@ import xmu.yida.ad.domain.Ad;
 import xmu.yida.ad.service.AdService;
 import xmu.yida.ad.util.ResponseUtil;
 
+import java.util.HashMap;
+
 /**
  * @Author zjy
  * @create 2019/12/8 23:46
@@ -18,14 +20,19 @@ public class AdController {
     AdService adService;
 
     @GetMapping("/admins/ads")
-    public Object adminFindAdList(@RequestParam(defaultValue = "1") Integer page,
-                                  @RequestParam(defaultValue = "10") Integer limit
+    public Object adminFindAdList(
+            @RequestParam(name = "name",required = false) String name,
+            @RequestParam(name = "adContent",required = false) String adContent,
+            @RequestParam(name="page",defaultValue = "1") Integer page,
+            @RequestParam(name="limit",defaultValue = "10") Integer limit
     ){
-        return ResponseUtil.ok(adService.getAllAds(page,limit));
+        HashMap<String,Object> map=new HashMap<String,Object>();
+        map.put("name",name);
+        map.put("content",adContent);
+        return ResponseUtil.ok(adService.getAllAds(page,limit,map));
     }
     @PostMapping("/ads")
     public Object adminCreateAd(@RequestBody Ad ad){
-        System.out.println(ad);
         Ad retAd=adService.addAd(ad);
         if(retAd==null){
             return ResponseUtil.createFailed();
@@ -68,9 +75,8 @@ public class AdController {
     }
 
     @GetMapping("/ads")
-    public Object userFindAdList(@RequestParam(defaultValue = "1") Integer page,
-                                 @RequestParam(defaultValue = "10") Integer limit){
-        return ResponseUtil.ok(adService.getAllAds(page,limit));
+    public Object userFindAdList(){
+        return ResponseUtil.ok(adService.userGetAllAds());
     }
 
 
