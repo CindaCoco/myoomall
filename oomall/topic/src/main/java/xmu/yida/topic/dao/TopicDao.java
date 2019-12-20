@@ -1,7 +1,5 @@
 package xmu.yida.topic.dao;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,13 +20,13 @@ public class TopicDao {
     @Autowired
     TopicMapper topicMapper;
 
-    public Topic addTopic(Topic topic){
-        topic.setGmtCreate(LocalDateTime.now());
-        topic.setGmtModified(LocalDateTime.now());
-        if(topicMapper.addTopic(topic)){
-            Integer id=topic.getId();
-            TopicPO topicPO=topicMapper.findTopicById(id);
-            return new Topic(topicPO);
+    public TopicPO addTopic(TopicPO topicPO){
+        topicPO.setGmtCreate(LocalDateTime.now());
+        topicPO.setGmtModified(LocalDateTime.now());
+        if(topicMapper.addTopic(topicPO)){
+            Integer id=topicPO.getId();
+            TopicPO updatedTopicPO=topicMapper.findTopicById(id);
+            return updatedTopicPO;
         }else{
             return null;
         }
@@ -49,14 +47,11 @@ public class TopicDao {
         return topicMapper.deleteTopicById(id);
     }
 
-    public Topic updateTopic(Topic topic){
-        topic.setGmtModified(LocalDateTime.now());
-        if(isArgsInvalid(topic)){
-            return null;
-        }
-        if(topicMapper.updateTopic(topic)){
-            TopicPO topicPO=topicMapper.findTopicById(topic.getId());
-            return new Topic(topicPO);
+    public TopicPO updateTopic(TopicPO topicPO){
+        topicPO.setGmtModified(LocalDateTime.now());
+        if(topicMapper.updateTopic(topicPO)){
+            TopicPO retTopicPO=topicMapper.findTopicById(topicPO.getId());
+            return retTopicPO;
         }else{
             return null;
         }
@@ -71,12 +66,5 @@ public class TopicDao {
             topicList.add(new Topic(topicPO));
         }
         return topicList;
-    }
-
-    private boolean isArgsInvalid(TopicPO topicPO){
-        if(topicPO.getBeDeleted()){
-            return true;
-        }
-        return false;
     }
 }

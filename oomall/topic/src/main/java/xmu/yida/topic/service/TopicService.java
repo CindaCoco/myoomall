@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xmu.yida.topic.dao.TopicDao;
 import xmu.yida.topic.domain.Topic;
+import xmu.yida.topic.domain.TopicPO;
 
 import java.util.List;
 
@@ -13,8 +14,8 @@ public class TopicService {
     @Autowired
     private TopicDao topicDao;
 
-    public Topic addTopic(Topic topic){
-        return topicDao.addTopic(topic);
+    public TopicPO addTopic(TopicPO topicPO){
+        return topicDao.addTopic(topicPO);
     }
 
     public Topic getTopicById(Integer id){
@@ -29,7 +30,7 @@ public class TopicService {
         return topicDao.deleteTopicById(id);
     }
 
-    public Topic updateTopic(Topic topic){
-        return topicDao.updateTopic(topic);
+    public TopicPO updateTopic(TopicPO topicPO){
+        return topicDao.updateTopic(topicPO);
     }
 }

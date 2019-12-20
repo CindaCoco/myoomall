@@ -110,5 +110,29 @@ public class ResponseUtil {
     public static Object clientShutdown(){
         return fail(507,"服务已关闭");
     }
+
+    public static Object clientShutdown(String name){
+        return fail(507,name+"服务已关闭");
+    }
+
+    public static Object invalidTopic(){
+        return fail(650,"该话题是无效话题，(不在数据库里的或者逻辑删除)");
+    }
+
+    public static Object topicUpdateFailed(){
+        return fail(651,"话题更新失败");
+    }
+
+    public static Object topicAddFailed(){
+        return fail(652,"话题添加失败");
+    }
+
+    public static Object topicDeleteFailed(){
+        return fail(653,"话题删除失败");
+    }
+
+    public static Object topicGetFailed(){
+        return fail(654,"话题查看失败");
+    }
 }
 

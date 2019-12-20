@@ -118,6 +118,5 @@
     <modules>
         <module>ad</module>
         <module>topic</module>
-        <module>zuul</module>
     </modules>
 </project>

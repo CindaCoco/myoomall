@@ -2,6 +2,7 @@ package xmu.yida.topic.domain;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,12 +32,9 @@ public class Topic extends TopicPO implements Serializable {
         this.setBeDeleted(topicPO.getBeDeleted());
         String picUrlList=this.getPicUrlList();
         if(picUrlList!=null){
-            JSONArray jsonArray= JSON.parseArray(picUrlList);
-            List<String> pictures=new ArrayList<>();
-            for(int i=0;i<jsonArray.size();i++){
-                pictures.add(jsonArray.get(i).toString());
-            }
-            this.setPictures(pictures);
+            JSONObject jsonObject=JSON.parseObject(picUrlList);
+            String pictures=jsonObject.getString("pictures");
+            this.setPictures(JSON.parseArray(pictures,String.class));
         }
     }
 }
