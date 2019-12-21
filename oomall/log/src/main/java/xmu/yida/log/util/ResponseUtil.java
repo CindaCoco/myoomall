@@ -1,4 +1,4 @@
-package xmu.yida.ad.util;
+package xmu.yida.log.util;
 
 
 import java.util.HashMap;

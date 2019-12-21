@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xmu.yida.log.mapper.LogMapper">
+    <resultMap id="LogMap" type="Log" autoMapping="true">
+        <id property="id" column="id"/>
+        <result column="status" jdbcType="TINYINT" property="statusCode"/>
+    </resultMap>
+
+
+    <select id="list" resultMap="LogMap">
+        select id,admin_id,ip,type,actions,status,gmt_create,gmt_modified,action_id
+        from `oomall_log`
+    </select>
+
+
+    <insert id="addLog" parameterType="Log" useGeneratedKeys="true" keyColumn="id">
+        insert into `oomall_log`(admin_id,ip,type,actions,status,gmt_create,gmt_modified,action_id)
+        values (#{adminId},#{ip},#{type},#{actions},#{statusCode},#{gmtCreate},#{gmtModified},#{actionId})
+    </insert>
+</mapper>

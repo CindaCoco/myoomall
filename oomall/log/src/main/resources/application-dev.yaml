@@ -1,18 +1,25 @@
 server:
-  port: 8002
+  port: 8003
 
 spring:
   application:
-    name: adService
+    name: LogService
   datasource:
     username: oomallUser
     password: 123456
     url: jdbc:mysql://handsomeyida.xyz:3306/oomall?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8
     driver-class-name: com.mysql.cj.jdbc.Driver
+    dbcp2:
+      min-idle: 5 #数据库连接池的最小维持连接数
+      initial-size: 5 #初始化连接数
+      max-total: 5 #最大连接数
+      max-wait-millis: 200 #等待连接获取的最大超时时间
+
 mybatis:
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: xmu.yida.ad.domain
+  type-aliases-package: xmu.yida.log.domain
   configuration:
+    #自动将SQL中查出来的带下划线的字段，转换为驼峰标志，再去匹配类中的属性
     map-underscore-to-camel-case: true
 #showSql
 logging:
@@ -26,22 +33,12 @@ eureka:
     service-url:
       defaultZone: http://handsomeyida.xyz:8761/eureka
   instance:
-    instance-id: adService8002-hystrix
+    instance-id: logService8003
     prefer-ip-address: true
     ip-address: handsomeyida.xyz
-
 info:
-  app.name: adService
+  app.name: LogService
   company.name: XMU
   author: LYD
-  build.artifactId: "@project.artifactId@"
-  build.version: "@project.version@"
-
-
-oomall:
-  host: localhost
-  port: 8002
-  user: test
-  password: 123456
-  adimuser: test1
-  adminpassword: 123456
+  build.artifactId: @project.artifactId@
+  build.version: @project.version@
