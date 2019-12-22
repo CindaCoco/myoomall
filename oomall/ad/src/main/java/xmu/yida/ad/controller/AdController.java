@@ -1,7 +1,7 @@
 package xmu.yida.ad.controller;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.*;
 import xmu.yida.ad.controller.feign.LogClientService;
 import xmu.yida.ad.domain.Ad;
@@ -13,8 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 
 /**
- * @Author zjy
- * @create 2019/12/8 23:46
+ * @author LYD
  */
 @RestController
 public class AdController {
@@ -25,6 +24,14 @@ public class AdController {
     @Autowired
     LogClientService logClientService;
 
+
+    private final static Integer SELECT=0;
+    private final static Integer INSERT=1;
+    private final static Integer UPDATE=2;
+    private final static Integer DELETE=3;
+
+
+
     @GetMapping("/admins/ads")
     public Object adminFindAdList(
             @RequestParam(name = "name",required = false) String name,
@@ -33,78 +40,105 @@ public class AdController {
             @RequestParam(name="limit",defaultValue = "10") Integer limit,
             HttpServletRequest request
     ){
-        HashMap<String,Object> map=new HashMap<String,Object>();
+        Integer adminId=getUserId(request);
+        if(adminId==null){
+            return ResponseUtil.fail(668,"管理员未登录");
+        }
+        String ip=request.getHeader("ip");
+        if(page<=0||limit<=0){
+            return ResponseUtil.fail(680,"获取广告失败");
+        }
+        HashMap<String,Object> map=new HashMap<>(2);
         map.put("name",name);
         map.put("content",adContent);
         Object retObj=adService.getAllAds(page,limit,map);
         if(retObj!=null){
-            Log log=new Log(request.getIntHeader("userId"),
-                    request.getHeader("ip"),0,"查询广告列表",1,null);
-            logClientService.addLog(log);
+            createLog(adminId,ip,SELECT,"查询广告列表",1,null);
             return ResponseUtil.ok(retObj);
         }else {
-            Log log=new Log(request.getIntHeader("userId"),
-                    request.getHeader("ip"),0,"查询广告列表",0,null);
-            logClientService.addLog(log);
-            return ResponseUtil.fail();
+            createLog(adminId,ip,SELECT,"查询广告列表",0,null);
+            return ResponseUtil.fail(680,"获取广告失败");
         }
 
     }
+
+
     @PostMapping("/ads")
     public Object adminCreateAd(@RequestBody Ad ad,HttpServletRequest request){
+        Integer adminId=getUserId(request);
+        if(adminId==null){
+            return ResponseUtil.fail(668,"管理员未登录");
+        }
+        String ip=request.getHeader("ip");
+
         Ad retAd=adService.addAd(ad);
         if(retAd==null){
-            Log log=new Log(request.getIntHeader("userId"),
-                    request.getHeader("ip"),1,"增加广告",0,null);
-            logClientService.addLog(log);
-            return ResponseUtil.createFailed();
+            createLog(adminId,ip,INSERT,"创建广告",0,null);
+            return ResponseUtil.fail(681,"创建广告失败");
         }else{
-            Log log=new Log(request.getIntHeader("userId"),
-                    request.getHeader("ip"),1,"增加广告",1,null);
-            logClientService.addLog(log);
+            createLog(adminId,ip,INSERT,"创建广告",1,retAd.getId());
             return ResponseUtil.ok(retAd);
         }
     }
-    @HystrixCommand(fallbackMethod = "processHystrixId")
+
     @GetMapping("/ads/{id}")
-    public Object adminFindAdById(@PathVariable Integer id){
+    public Object adminFindAdById(@PathVariable Integer id, HttpServletRequest request){
+        Integer adminId=getUserId(request);
+        if(adminId==null){
+            return ResponseUtil.fail(668,"管理员未登录");
+        }
+        String ip=request.getHeader("ip");
+        if(id==null||id<=0){
+            return ResponseUtil.fail(680,"获取广告失败");
+        }
         Ad retAd=adService.getAdById(id);
         if(retAd==null){
-            return ResponseUtil.notFound();
+            createLog(adminId,ip,SELECT,"获取广告",0,id);
+            return ResponseUtil.fail(680,"获取广告失败");
         }else{
+            createLog(adminId,ip,SELECT,"获取广告",1,id);
             return ResponseUtil.ok(retAd);
         }
     }
     @PutMapping("/ads/{id}")
     public Object adminUpdateAd(@PathVariable Integer id, @RequestBody Ad ad,HttpServletRequest request){
-            ad.setId(id);
-            Ad retAd=adService.updateAd(ad);
-            if(retAd==null){
-                Log log=new Log(request.getIntHeader("userId"),
-                        request.getHeader("ip"),2,"修改广告",0,id);
-                logClientService.addLog(log);
-                return ResponseUtil.updatedDataFailed();
-            }else{
-                Log log=new Log(request.getIntHeader("userId"),
-                        request.getHeader("ip"),2,"修改广告",1,id);
-                logClientService.addLog(log);
-                return  ResponseUtil.ok(retAd);
-            }
+
+        Integer adminId=getUserId(request);
+        if(adminId==null){
+            return ResponseUtil.fail(668,"管理员未登录");
+        }
+        String ip=request.getHeader("ip");
+        if(id==null||id<=0||ad.getStartTime().isAfter(ad.getEndTime())){
+            return ResponseUtil.fail(682,"修改广告失败");
+        }
+        ad.setId(id);
+        Ad retAd=adService.updateAd(ad);
+        if(retAd==null){
+            createLog(adminId,ip,UPDATE,"修改广告",0,id);
+            return ResponseUtil.fail(682,"修改广告失败");
+        }else{
+            createLog(adminId,ip,UPDATE,"修改广告",1,id);
+            return ResponseUtil.ok(retAd);
+        }
     }
 
     @DeleteMapping("/ads/{id}")
     public Object adminDeleteAd(@PathVariable Integer id,HttpServletRequest request){
+        Integer adminId=getUserId(request);
+        if(adminId==null){
+            return ResponseUtil.fail(668,"管理员未登录");
+        }
+        String ip=request.getHeader("ip");
+        if(id==null||id<=0){
+            return ResponseUtil.fail(683,"删除广告失败");
+        }
         boolean success=adService.deleteAdById(id);
         if(success){
-            Log log=new Log(request.getIntHeader("userId"),
-                    request.getHeader("ip"),3,"删除广告",1,id);
-            logClientService.addLog(log);
+            createLog(adminId,ip,DELETE,"删除广告",1,id);
             return ResponseUtil.ok();
         }else{
-            Log log=new Log(request.getIntHeader("userId"),
-                    request.getHeader("ip"),3,"删除广告",0,id);
-            logClientService.addLog(log);
-            return ResponseUtil.fail();
+            createLog(adminId,ip,DELETE,"删除广告",0,id);
+            return ResponseUtil.fail(683,"删除广告失败");
         }
     }
 
@@ -114,7 +148,25 @@ public class AdController {
     }
 
 
-    public Object processHystrixId(@PathVariable Integer id){
-        return ResponseUtil.fail();
+
+    private void createLog(Integer adminId,String ip,Integer type,String actions,
+                           Integer statusCode,Integer actionId){
+        Log log=new Log();
+        log.setAdminId(adminId);
+        log.setIp(ip);
+        log.setType(type);
+        log.setActions(actions);
+        log.setStatusCode(statusCode);
+        log.setActionId(actionId);
+        logClientService.addLog(log);
     }
+
+    private Integer getUserId(HttpServletRequest request){
+        String userId=request.getHeader("userid");
+        if(userId==null){
+            return null;
+        }
+        return Integer.valueOf(userId);
+    }
+
 }

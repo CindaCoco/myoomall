@@ -10,6 +10,9 @@
     <select id="list" resultMap="LogMap">
         select id,admin_id,ip,type,actions,status,gmt_create,gmt_modified,action_id
         from `oomall_log`
+        <where>
+            <if test="adminId!=null">admin_id = #{adminId}</if>
+        </where>
     </select>
 
 

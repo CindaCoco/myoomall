@@ -5,9 +5,9 @@ spring:
   application:
     name: LogService
   datasource:
-    username: oomallUser
-    password: 123456
-    url: jdbc:mysql://handsomeyida.xyz:3306/oomall?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8
+    username: user3_2
+    password: ooad2
+    url: jdbc:mysql://47.52.88.176:3306/DB3_2?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8
     driver-class-name: com.mysql.cj.jdbc.Driver
     dbcp2:
       min-idle: 5 #数据库连接池的最小维持连接数
@@ -35,7 +35,7 @@ eureka:
   instance:
     instance-id: logService8003
     prefer-ip-address: true
-    ip-address: handsomeyida.xyz
+    ip-address: 123.56.30.118
 info:
   app.name: LogService
   company.name: XMU

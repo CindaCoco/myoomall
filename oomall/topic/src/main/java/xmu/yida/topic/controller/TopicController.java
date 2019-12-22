@@ -22,8 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class TopicController {
 
-    private static final String ADSERVICEURL="http://ADSERVICE";
-
     @Autowired
     private AdClientService adClientService;
 
@@ -39,22 +37,30 @@ public class TopicController {
     @Autowired
     RestTemplate restTemplate;
 
+    private final static Integer SELECT=0;
+    private final static Integer INSERT=1;
+    private final static Integer UPDATE=2;
+    private final static Integer DELETE=3;
 
     @GetMapping("/admin/topics")
     public Object adminlist(@RequestParam(defaultValue = "1",name="page") Integer page,
                             @RequestParam(defaultValue = "10",name = "limit") Integer limit,
                             HttpServletRequest request){
+        Integer adminId=getUserId(request);
+        if(adminId==null){
+            return ResponseUtil.fail(668,"管理员未登录");
+        }
+        if(page<=0||limit<=0){
+            return ResponseUtil.fail(654,"话题查看失败");
+        }
+        String ip=request.getHeader("ip");
         Object retObj=topicService.getAllTopics(page,limit);
         if(retObj!=null){
-            Log log=new Log(request.getIntHeader("userId"),
-                    request.getHeader("ip"),0,"查询专题列表",1,null);
-            logClientService.addLog(log);
+            createLog(adminId,ip,SELECT,"查询话题列表",1,null);
             return ResponseUtil.ok(retObj);
         }else{
-            Log log=new Log(request.getIntHeader("userId"),
-                    request.getHeader("ip"),0,"查询专题列表",0,null);
-            logClientService.addLog(log);
-            return ResponseUtil.topicGetFailed();
+            createLog(adminId,ip,SELECT,"查询话题列表",0,null);
+            return ResponseUtil.fail(654,"话题查看失败");
         }
     }
     /**
@@ -71,23 +77,27 @@ public class TopicController {
         if(retObj!=null){
             return ResponseUtil.ok(retObj);
         }else{
-            return ResponseUtil.topicGetFailed();
+            return ResponseUtil.fail(654,"话题查看失败");
         }
     }
 
 
     @GetMapping("/admin/topics/{id}")
     public Object adminDetail(@PathVariable Integer id,HttpServletRequest request){
+        Integer adminId=getUserId(request);
+        if(adminId==null){
+            return ResponseUtil.fail(668,"管理员未登录");
+        }
+        String ip=request.getHeader("ip");
+        if(id==null||id<=0){
+            return ResponseUtil.fail(650,"该话题是无效话题");
+        }
         Topic topic=topicService.getTopicById(id);
         if(topic==null){
-            Log log=new Log(request.getIntHeader("userId"),
-                    request.getHeader("ip"),0,"查询专题详情",0,id);
-            logClientService.addLog(log);
-            return ResponseUtil.invalidTopic();
+            createLog(adminId,ip,SELECT,"查看话题",0,id);
+            return ResponseUtil.fail(650,"该话题是无效话题");
         }else{
-            Log log=new Log(request.getIntHeader("userId"),
-                    request.getHeader("ip"),0,"查询专题详情",1,id);
-            logClientService.addLog(log);
+            createLog(adminId,ip,SELECT,"查看话题",1,id);
             return ResponseUtil.ok(topic);
         }
     }
@@ -100,9 +110,12 @@ public class TopicController {
      */
     @GetMapping("/topics/{id}")
     public Object detail(@PathVariable Integer id){
+        if(id==null||id<=0){
+            return ResponseUtil.fail(650,"该话题是无效话题");
+        }
         Topic topic=topicService.getTopicById(id);
         if(topic==null){
-            return ResponseUtil.invalidTopic();
+            return ResponseUtil.fail(650,"该话题是无效话题");
         }else{
             return ResponseUtil.ok(topic);
         }
@@ -110,69 +123,78 @@ public class TopicController {
 
     @PostMapping("/topics")
     public Object create(@RequestBody TopicPO topicPO,HttpServletRequest request) {
+        Integer adminId=getUserId(request);
+        if(adminId==null){
+            return ResponseUtil.fail(668,"管理员未登录");
+        }
+        String ip=request.getHeader("ip");
         TopicPO retTopic=topicService.addTopic(topicPO);
         if(retTopic==null){
-            Log log=new Log(request.getIntHeader("userId"),
-                    request.getHeader("ip"),1,"插入专题",0,null);
-            logClientService.addLog(log);
-            return ResponseUtil.topicAddFailed();
+            createLog(adminId,ip,INSERT,"添加话题",0,null);
+            return ResponseUtil.fail(652,"话题添加失败");
         }else{
-            Log log=new Log(request.getIntHeader("userId"),
-                    request.getHeader("ip"),1,"插入专题",1,null);
-            logClientService.addLog(log);
+            createLog(adminId,ip,INSERT,"添加话题",1,retTopic.getId());
             return ResponseUtil.ok(topicPO);
         }
     }
     @PutMapping("/topics/{id}")
     public Object update(@RequestBody TopicPO topicPO,@PathVariable Integer id,HttpServletRequest request) {
-            topicPO.setId(id);
-            TopicPO retTopic=topicService.updateTopic(topicPO);
-            if(retTopic==null){
-                Log log=new Log(request.getIntHeader("userId"),
-                        request.getHeader("ip"),2,"修改专题",0,id);
-                logClientService.addLog(log);
-                return ResponseUtil.topicUpdateFailed();
-            }else{
-                Log log=new Log(request.getIntHeader("userId"),
-                        request.getHeader("ip"),2,"插入专题",1,id);
-                logClientService.addLog(log);
-                return ResponseUtil.ok(topicPO);
-            }
+        Integer adminId=getUserId(request);
+        if(adminId==null){
+            return ResponseUtil.fail(668,"管理员未登录");
+        }
+        String ip=request.getHeader("ip");
+        if(id==null||id<=0){
+            return ResponseUtil.fail(650,"该话题是无效话题");
+        }
+        topicPO.setId(id);
+        TopicPO retTopic=topicService.updateTopic(topicPO);
+        if(retTopic==null){
+            createLog(adminId,ip,UPDATE,"更新话题",0,id);
+            return ResponseUtil.fail(651,"话题更新失败");
+        }else{
+            createLog(adminId,ip,UPDATE,"更新话题",1,id);
+            return ResponseUtil.ok(retTopic);
+        }
     }
 
     @DeleteMapping("/topics/{id}")
     public Object delete(@PathVariable Integer id,HttpServletRequest request) {
+        Integer adminId=getUserId(request);
+        if(adminId==null){
+            return ResponseUtil.fail(668,"管理员未登录");
+        }
+        if(id==null|id<=0){
+            return ResponseUtil.fail(650,"该话题是无效话题");
+        }
+        String ip=request.getHeader("ip");
         boolean result=topicService.deleteTopicById(id);
         if(result){
-            Log log=new Log(request.getIntHeader("userId"),
-                    request.getHeader("ip"),3,"删除专题",1,id);
-            logClientService.addLog(log);
+            createLog(adminId,ip,DELETE,"删除话题",1,id);
             return ResponseUtil.ok();
         }else{
-            return ResponseUtil.topicDeleteFailed();
+            createLog(adminId,ip,DELETE,"删除话题",0,id);
+            return ResponseUtil.fail(653,"话题删除失败");
         }
     }
 
-    @GetMapping("/test")
-    public Object hello(){
-        return adClientService.getAds();
+    private void createLog(Integer adminId,String ip,Integer type,String actions,
+                           Integer statusCode,Integer actionId){
+        Log log=new Log();
+        log.setAdminId(adminId);
+        log.setIp(ip);
+        log.setType(type);
+        log.setActions(actions);
+        log.setStatusCode(statusCode);
+        log.setActionId(actionId);
+        logClientService.addLog(log);
     }
 
-
-    /**
-     * 写日志，返回正确或者错误码
-     * @param log 日志
-     * @param retObj 返回码
-     * @return 返回码
-     */
-    public Object returnResult(Log log, Object retObj)
-    {
-        try {
-            logClientService.addLog(log);
-            return retObj;
-        } catch (Exception e) {
-            System.out.println("写日志失败");
-            return retObj;
+    private Integer getUserId(HttpServletRequest request){
+        String userId=request.getHeader("userid");
+        if(userId==null){
+            return null;
         }
+        return Integer.valueOf(userId);
     }
 }

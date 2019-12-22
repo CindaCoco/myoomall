@@ -14,7 +14,7 @@ public interface LogMapper {
      *
      * @return log列表
      */
-    public List<Log> list();
+    public List<Log> list(Integer adminId);
 
     /**
      *

@@ -1,6 +1,7 @@
 package xmu.yida.log.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 import xmu.yida.log.dao.LogDao;
 import xmu.yida.log.domain.Log;
@@ -14,8 +15,8 @@ public class LogService {
     private LogDao logDao;
 
 
-    public List<Log> list(Integer page,Integer limit){
-        return logDao.list(page,limit);
+    public List<Log> list(Integer page, Integer limit, Integer adminId){
+        return logDao.list(page,limit,adminId);
     }
 
 

@@ -15,9 +15,9 @@ public class LogDao {
     @Autowired
     private LogMapper logMapper;
 
-    public List<Log> list(Integer page,Integer limit){
+    public List<Log> list(Integer page,Integer limit,Integer adminId){
         PageHelper.startPage(page,limit);
-        return logMapper.list();
+        return logMapper.list(adminId);
     }
 
 
