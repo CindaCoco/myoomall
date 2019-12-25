@@ -8,14 +8,17 @@ import xmu.yida.topic.domain.TopicPO;
 
 import java.util.List;
 
+/**
+ * @author LYD
+ */
 @Service
 public class TopicService {
 
     @Autowired
     private TopicDao topicDao;
 
-    public TopicPO addTopic(TopicPO topicPO){
-        return topicDao.addTopic(topicPO);
+    public TopicPO addTopic(TopicPO topicPo){
+        return topicDao.addTopic(topicPo);
     }
 
     public Topic getTopicById(Integer id){
@@ -30,7 +33,7 @@ public class TopicService {
         return topicDao.deleteTopicById(id);
     }
 
-    public TopicPO updateTopic(TopicPO topicPO){
-        return topicDao.updateTopic(topicPO);
+    public TopicPO updateTopic(TopicPO topicPo){
+        return topicDao.updateTopic(topicPo);
     }
 }

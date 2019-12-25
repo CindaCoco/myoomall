@@ -36,6 +36,7 @@ import java.util.Map;
  * <li> 7xx，管理后台后端业务错误码，
  * 具体见litemall-wx-api模块的WxResponseCode。
  * </ul>
+ * @author QM
  */
 public class ResponseUtil {
     public static Object ok() {
@@ -66,73 +67,9 @@ public class ResponseUtil {
         obj.put("errmsg", errmsg);
         return obj;
     }
-
-    public static Object badArgument() {
-        return fail(401, "参数不对");
-    }
-
-    public static Object badArgumentValue() {
-        return fail(402, "参数值不对");
-    }
-
-    public static Object notFound(){
-        return fail(404,"资源不存在");
-    }
-
-    public static Object createFailed(){
-        return fail(506,"创建资源失败");
-    }
-
-    public static Object unlogin() {
-        return fail(501, "请登录");
-    }
-
-    public static Object serious() {
-        return fail(502, "系统内部错误");
-    }
-
-    public static Object unsupport() {
-        return fail(503, "业务不支持");
-    }
-
-    public static Object updatedDateExpired() {
-        return fail(504, "更新数据已经失效");
-    }
-
-    public static Object updatedDataFailed() {
-        return fail(505, "更新数据失败");
-    }
-
-    public static Object unauthz() {
-        return fail(506, "无操作权限");
-    }
-
-    public static Object clientShutdown(){
-        return fail(507,"服务已关闭");
-    }
-
     public static Object clientShutdown(String name){
         return fail(507,name+"服务已关闭");
     }
 
-    public static Object invalidTopic(){
-        return fail(650,"该话题是无效话题，(不在数据库里的或者逻辑删除)");
-    }
-
-    public static Object topicUpdateFailed(){
-        return fail(651,"话题更新失败");
-    }
-
-    public static Object topicAddFailed(){
-        return fail(652,"话题添加失败");
-    }
-
-    public static Object topicDeleteFailed(){
-        return fail(653,"话题删除失败");
-    }
-
-    public static Object topicGetFailed(){
-        return fail(654,"话题查看失败");
-    }
 }
 

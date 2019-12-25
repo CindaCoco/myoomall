@@ -20,57 +20,60 @@ public class TopicDao {
     @Autowired
     TopicMapper topicMapper;
 
-    public TopicPO addTopic(TopicPO topicPO){
-        topicPO.setGmtCreate(LocalDateTime.now());
-        topicPO.setGmtModified(LocalDateTime.now());
-        if(topicMapper.addTopic(topicPO)){
-            Integer id=topicPO.getId();
-            TopicPO updatedTopicPO=topicMapper.findTopicById(id);
-            return updatedTopicPO;
+    public TopicPO addTopic(TopicPO topicPo){
+        topicPo.setGmtCreate(LocalDateTime.now());
+        topicPo.setGmtModified(LocalDateTime.now());
+        if(topicMapper.addTopic(topicPo)){
+            Integer id=topicPo.getId();
+            TopicPO updatedTopicPo=topicMapper.findTopicById(id);
+            return updatedTopicPo;
         }else{
             return null;
         }
     }
 
     public Topic findTopicById(Integer id){
-        TopicPO topicPO = topicMapper.findTopicById(id);
-        return new Topic(topicPO);
+        TopicPO topicPo = topicMapper.findTopicById(id);
+        if(topicPo==null){
+            return null;
+        }
+        return new Topic(topicPo);
     }
 
     public List<Topic> findAllTopics(Integer page,Integer limit){
         PageHelper.startPage(page,limit);
-        List<TopicPO> topicPOList= topicMapper.findAllTopics();
-        return topicList(topicPOList);
+        List<TopicPO> topicPoList= topicMapper.findAllTopics();
+        return topicList(topicPoList);
     }
 
     public boolean deleteTopicById(Integer id){
-        TopicPO topicPO=topicMapper.findTopicById(id);
-        if(topicPO==null){
+        TopicPO topicPo=topicMapper.findTopicById(id);
+        if(topicPo==null){
             return false;
         }
-        if(topicPO.getBeDeleted()){
+        if(topicPo.getBeDeleted()){
             return false;
         }
         return topicMapper.deleteTopicById(id);
     }
 
-    public TopicPO updateTopic(TopicPO topicPO){
-        topicPO.setGmtModified(LocalDateTime.now());
-        if(topicMapper.updateTopic(topicPO)){
-            TopicPO retTopicPO=topicMapper.findTopicById(topicPO.getId());
-            return retTopicPO;
+    public TopicPO updateTopic(TopicPO topicPo){
+        topicPo.setGmtModified(LocalDateTime.now());
+        if(topicMapper.updateTopic(topicPo)){
+            TopicPO retTopicPo=topicMapper.findTopicById(topicPo.getId());
+            return retTopicPo;
         }else{
             return null;
         }
     }
 
-    private List<Topic> topicList(List<TopicPO> topicPOList){
-        if(topicPOList==null){
+    private List<Topic> topicList(List<TopicPO> topicPoList){
+        if(topicPoList==null){
             return null;
         }
         List<Topic> topicList=new ArrayList<>();
-        for(TopicPO topicPO:topicPOList){
-            topicList.add(new Topic(topicPO));
+        for(TopicPO topicPo:topicPoList){
+            topicList.add(new Topic(topicPo));
         }
         return topicList;
     }

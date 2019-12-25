@@ -14,10 +14,10 @@ import java.util.List;
 public interface TopicMapper {
     /**
      * 增加一个专题
-     * @param topicPO 专题对象
+     * @param topicPo 专题对象
      * @return 返回操作结果
      */
-    boolean addTopic(TopicPO topicPO);
+    boolean addTopic(TopicPO topicPo);
 
     /**
      * 通过id查找topic
@@ -26,6 +26,10 @@ public interface TopicMapper {
      */
     TopicPO findTopicById(Integer id);
 
+    /**
+     * 查找topic列表
+     * @return topicPo列表
+     */
     List<TopicPO> findAllTopics();
 
     /**
@@ -37,8 +41,8 @@ public interface TopicMapper {
 
     /**
      * 修改专题
-     * @param topicPO 要修改的专题
+     * @param topicPo 要修改的专题
      * @return 操作结果
      */
-    boolean updateTopic(TopicPO topicPO);
+    boolean updateTopic(TopicPO topicPo);
 }

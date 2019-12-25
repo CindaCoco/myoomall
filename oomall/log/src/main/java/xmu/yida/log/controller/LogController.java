@@ -8,7 +8,9 @@ import xmu.yida.log.util.ResponseUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
-
+/**
+ * @author LYD
+ */
 @RestController
 public class LogController {
 
@@ -24,7 +26,7 @@ public class LogController {
         return Integer.valueOf(userIdStr);
     }
 
-    @GetMapping("/logs")
+    @GetMapping(value = "/logs",produces = "application/json;charset=utf-8")
     public Object list(@RequestParam(name = "page",defaultValue = "1")Integer page,
                        @RequestParam(name = "limit",defaultValue = "10") Integer limit,
                        @RequestParam(name = "adminId",required = false)Integer adminId,
@@ -42,7 +44,7 @@ public class LogController {
     }
 
 
-    @PostMapping("/log")
+    @PostMapping(value = "/log",produces = "application/json;charset=utf-8")
     public Object addLog(@RequestBody Log log){
         if(log==null){
             return ResponseUtil.fail();

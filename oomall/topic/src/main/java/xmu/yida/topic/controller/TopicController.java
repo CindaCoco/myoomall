@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import xmu.yida.topic.controller.feign.AdClientService;
 import xmu.yida.topic.controller.feign.LogClientService;
 import xmu.yida.topic.domain.Log;
 import xmu.yida.topic.domain.Topic;
@@ -22,8 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class TopicController {
 
-    @Autowired
-    private AdClientService adClientService;
 
     @Autowired
     private LogClientService logClientService;
@@ -42,8 +39,8 @@ public class TopicController {
     private final static Integer UPDATE=2;
     private final static Integer DELETE=3;
 
-    @GetMapping("/admin/topics")
-    public Object adminlist(@RequestParam(defaultValue = "1",name="page") Integer page,
+    @GetMapping(value = "/admin/topics",produces = "application/json;charset=utf-8")
+    public Object adminGetTopicList(@RequestParam(defaultValue = "1",name="page") Integer page,
                             @RequestParam(defaultValue = "10",name = "limit") Integer limit,
                             HttpServletRequest request){
         Integer adminId=getUserId(request);
@@ -51,7 +48,7 @@ public class TopicController {
             return ResponseUtil.fail(668,"管理员未登录");
         }
         if(page<=0||limit<=0){
-            return ResponseUtil.fail(654,"话题查看失败");
+            return ResponseUtil.fail(580,"参数不合法");
         }
         String ip=request.getHeader("ip");
         Object retObj=topicService.getAllTopics(page,limit);
@@ -70,9 +67,12 @@ public class TopicController {
      * @param limit 分页大小
      * @return 专题列表
      */
-    @GetMapping("/topics")
+    @GetMapping(value = "/topics",produces = "application/json;charset=utf-8")
     public Object list(@RequestParam(defaultValue = "1",name = "page") Integer page,
                        @RequestParam(defaultValue = "10",name = "limit") Integer limit){
+        if(page<=0||limit<=0){
+            return ResponseUtil.fail(580,"参数不合法");
+        }
         Object retObj=topicService.getAllTopics(page,limit);
         if(retObj!=null){
             return ResponseUtil.ok(retObj);
@@ -82,7 +82,7 @@ public class TopicController {
     }
 
 
-    @GetMapping("/admin/topics/{id}")
+    @GetMapping(value = "/admin/topics/{id}",produces = "application/json;charset=utf-8")
     public Object adminDetail(@PathVariable Integer id,HttpServletRequest request){
         Integer adminId=getUserId(request);
         if(adminId==null){
@@ -90,7 +90,7 @@ public class TopicController {
         }
         String ip=request.getHeader("ip");
         if(id==null||id<=0){
-            return ResponseUtil.fail(650,"该话题是无效话题");
+            return ResponseUtil.fail(580,"参数错误");
         }
         Topic topic=topicService.getTopicById(id);
         if(topic==null){
@@ -108,10 +108,10 @@ public class TopicController {
      * @param id 专题ID
      * @return 专题详情
      */
-    @GetMapping("/topics/{id}")
+    @GetMapping(value = "/topics/{id}",produces = "application/json;charset=utf-8")
     public Object detail(@PathVariable Integer id){
         if(id==null||id<=0){
-            return ResponseUtil.fail(650,"该话题是无效话题");
+            return ResponseUtil.fail(580,"参数不合法");
         }
         Topic topic=topicService.getTopicById(id);
         if(topic==null){
@@ -121,34 +121,34 @@ public class TopicController {
         }
     }
 
-    @PostMapping("/topics")
-    public Object create(@RequestBody TopicPO topicPO,HttpServletRequest request) {
+    @PostMapping(value = "/topics",produces = "application/json;charset=utf-8")
+    public Object create(@RequestBody TopicPO topicPo,HttpServletRequest request) {
         Integer adminId=getUserId(request);
         if(adminId==null){
             return ResponseUtil.fail(668,"管理员未登录");
         }
         String ip=request.getHeader("ip");
-        TopicPO retTopic=topicService.addTopic(topicPO);
+        TopicPO retTopic=topicService.addTopic(topicPo);
         if(retTopic==null){
             createLog(adminId,ip,INSERT,"添加话题",0,null);
             return ResponseUtil.fail(652,"话题添加失败");
         }else{
             createLog(adminId,ip,INSERT,"添加话题",1,retTopic.getId());
-            return ResponseUtil.ok(topicPO);
+            return ResponseUtil.ok(topicPo);
         }
     }
-    @PutMapping("/topics/{id}")
-    public Object update(@RequestBody TopicPO topicPO,@PathVariable Integer id,HttpServletRequest request) {
+    @PutMapping(value = "/topics/{id}",produces = "application/json;charset=utf-8")
+    public Object update(@RequestBody TopicPO topicPo,@PathVariable Integer id,HttpServletRequest request) {
         Integer adminId=getUserId(request);
         if(adminId==null){
             return ResponseUtil.fail(668,"管理员未登录");
         }
         String ip=request.getHeader("ip");
         if(id==null||id<=0){
-            return ResponseUtil.fail(650,"该话题是无效话题");
+            return ResponseUtil.fail(580,"参数不合法");
         }
-        topicPO.setId(id);
-        TopicPO retTopic=topicService.updateTopic(topicPO);
+        topicPo.setId(id);
+        TopicPO retTopic=topicService.updateTopic(topicPo);
         if(retTopic==null){
             createLog(adminId,ip,UPDATE,"更新话题",0,id);
             return ResponseUtil.fail(651,"话题更新失败");
@@ -158,14 +158,14 @@ public class TopicController {
         }
     }
 
-    @DeleteMapping("/topics/{id}")
+    @DeleteMapping(value = "/topics/{id}",produces = "application/json;charset=utf-8")
     public Object delete(@PathVariable Integer id,HttpServletRequest request) {
         Integer adminId=getUserId(request);
         if(adminId==null){
             return ResponseUtil.fail(668,"管理员未登录");
         }
-        if(id==null|id<=0){
-            return ResponseUtil.fail(650,"该话题是无效话题");
+        if(id==null||id<=0){
+            return ResponseUtil.fail(580,"参数不合法");
         }
         String ip=request.getHeader("ip");
         boolean result=topicService.deleteTopicById(id);

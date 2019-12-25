@@ -3,6 +3,9 @@ package xmu.yida.oomall;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author LYD
+ */
 @SpringBootApplication
 public class OomallApplication {
 

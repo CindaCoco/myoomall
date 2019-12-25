@@ -7,6 +7,9 @@ import xmu.yida.ad.domain.Ad;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author LYD
+ */
 @Mapper
 @Component
 public interface AdMapper {

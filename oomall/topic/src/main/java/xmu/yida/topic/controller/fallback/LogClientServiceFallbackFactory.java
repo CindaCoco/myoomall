@@ -6,6 +6,9 @@ import xmu.yida.topic.controller.feign.LogClientService;
 import xmu.yida.topic.domain.Log;
 import xmu.yida.topic.util.ResponseUtil;
 
+/**
+ * @author LYD
+ */
 @Component
 public class LogClientServiceFallbackFactory implements FallbackFactory<LogClientService> {
 

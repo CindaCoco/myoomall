@@ -32,7 +32,7 @@ public class AdController {
 
 
 
-    @GetMapping("/admins/ads")
+    @GetMapping(value = "/admins/ads",produces = "application/json;charset=utf-8")
     public Object adminFindAdList(
             @RequestParam(name = "name",required = false) String name,
             @RequestParam(name = "adContent",required = false) String adContent,
@@ -63,7 +63,7 @@ public class AdController {
     }
 
 
-    @PostMapping("/ads")
+    @PostMapping(value = "/ads",produces = "application/json;charset=utf-8")
     public Object adminCreateAd(@RequestBody Ad ad,HttpServletRequest request){
         Integer adminId=getUserId(request);
         if(adminId==null){
@@ -81,7 +81,20 @@ public class AdController {
         }
     }
 
-    @GetMapping("/ads/{id}")
+    @GetMapping(value = "/ads/{id}",produces = "application/json;charset=utf-8")
+    public Object findAdById(@PathVariable Integer id){
+        if(id==null||id<=0){
+            return ResponseUtil.fail(580,"参数不合法");
+        }
+        Ad retAd=adService.getAdById(id);
+        if(retAd==null){
+            return ResponseUtil.fail(680,"获取广告失败");
+        }else{
+            return ResponseUtil.ok(retAd);
+        }
+    }
+
+    @GetMapping(value = "/admin/ads/{id}",produces = "application/json;charset=utf-8")
     public Object adminFindAdById(@PathVariable Integer id, HttpServletRequest request){
         Integer adminId=getUserId(request);
         if(adminId==null){
@@ -89,7 +102,7 @@ public class AdController {
         }
         String ip=request.getHeader("ip");
         if(id==null||id<=0){
-            return ResponseUtil.fail(680,"获取广告失败");
+            return ResponseUtil.fail(580,"参数不合法");
         }
         Ad retAd=adService.getAdById(id);
         if(retAd==null){
@@ -100,16 +113,22 @@ public class AdController {
             return ResponseUtil.ok(retAd);
         }
     }
-    @PutMapping("/ads/{id}")
-    public Object adminUpdateAd(@PathVariable Integer id, @RequestBody Ad ad,HttpServletRequest request){
 
+    @PutMapping(value = "/ads/{id}",produces = "application/json;charset=utf-8")
+    public Object adminUpdateAd(@PathVariable Integer id, @RequestBody Ad ad,HttpServletRequest request){
         Integer adminId=getUserId(request);
         if(adminId==null){
             return ResponseUtil.fail(668,"管理员未登录");
         }
-        String ip=request.getHeader("ip");
-        if(id==null||id<=0||ad.getStartTime().isAfter(ad.getEndTime())){
+        Ad targetAd=adService.getAdById(id);
+        if(id==null||id<=0){
             return ResponseUtil.fail(682,"修改广告失败");
+        }
+        String ip=request.getHeader("ip");
+        if(targetAd.getStartTime()!=null&&targetAd.getEndTime()!=null){
+            if(targetAd.getStartTime().isAfter(targetAd.getEndTime())){
+                return ResponseUtil.fail(682,"修改广告失败");
+            }
         }
         ad.setId(id);
         Ad retAd=adService.updateAd(ad);
@@ -142,7 +161,7 @@ public class AdController {
         }
     }
 
-    @GetMapping("/ads")
+    @GetMapping(value = "/ads",produces = "application/json;charset=utf-8")
     public Object userFindAdList(){
         return ResponseUtil.ok(adService.userGetAllAds());
     }

@@ -6,20 +6,23 @@ import xmu.yida.log.domain.Log;
 
 import java.util.List;
 
+/**
+ * @author LYD
+ */
 @Mapper
 @Component
 public interface LogMapper {
 
-    /**
-     *
+    /** 通过管理员id查看对应的日志
+     * @param adminId 管理员id
      * @return log列表
      */
-    public List<Log> list(Integer adminId);
+    List<Log> list(Integer adminId);
 
     /**
-     *
-     * @param log
+     *  添加一条日志
+     * @param log 添加的日志
      * @return 操作结果
      */
-    public boolean addLog(Log log);
+    boolean addLog(Log log);
 }

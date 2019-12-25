@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author LYD
+ */
 @Repository
 public class AdDao {
     @Autowired

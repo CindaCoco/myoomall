@@ -8,8 +8,12 @@ import xmu.yida.ad.domain.Ad;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author LYD
+ */
 @Service
 public class AdService {
+
     @Autowired
     AdDao adDao;
 

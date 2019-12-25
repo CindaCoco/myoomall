@@ -8,11 +8,10 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+
 /**
- * @Author: 数据库与对象模型标准组
- * @Description:日志信息
- * @Data:Created in 14:50 2019/12/11
- **/
+ * @author LYD
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -47,12 +46,4 @@ public class Log implements Serializable {
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
 
-    public Log(Integer adminId, String ip, Integer type, String actions, Integer statusCode, Integer actionId) {
-        this.adminId = adminId;
-        this.ip = ip;
-        this.type = type;
-        this.actions = actions;
-        this.statusCode = statusCode;
-        this.actionId = actionId;
-    }
 }

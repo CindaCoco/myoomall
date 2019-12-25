@@ -19,7 +19,7 @@
                 is_deleted,
                 pic_url_list,
                 content
-        from `oomall_topic` where id = #{id}
+        from `oomall_topic` where id = #{id} and is_deleted=0
     </select>
 
     <select id="findAllTopics" resultMap="topicMap">

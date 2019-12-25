@@ -10,11 +10,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * @Author: 数据库与对象模型标准组
- * @Description:广告信息
- * @Data:Created in 14:50 2019/11/29
- * @Modified By:
- **/
+ * @author LYD
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

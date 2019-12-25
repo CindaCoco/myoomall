@@ -8,6 +8,9 @@ import xmu.yida.log.domain.Log;
 
 import java.util.List;
 
+/**
+ * @author LYD
+ */
 @Service
 public class LogService {
 

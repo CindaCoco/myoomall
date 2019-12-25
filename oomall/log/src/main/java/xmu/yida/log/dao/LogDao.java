@@ -9,6 +9,9 @@ import xmu.yida.log.mapper.LogMapper;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * @author LYD
+ */
 @Repository
 public class LogDao {
 
