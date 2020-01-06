@@ -70,7 +70,13 @@ public class AdController {
             return ResponseUtil.fail(668,"管理员未登录");
         }
         String ip=request.getHeader("ip");
-
+        if(ad.getStartTime()==null||ad.getEndTime()==null){
+            return ResponseUtil.fail(681,"创建广告失败，没有广告有效期");
+        }else{
+            if(ad.getStartTime().isAfter(ad.getEndTime())){
+                return ResponseUtil.fail(681,"广告开始时间晚于结束时间");
+            }
+        }
         Ad retAd=adService.addAd(ad);
         if(retAd==null){
             createLog(adminId,ip,INSERT,"创建广告",0,null);
@@ -120,10 +126,10 @@ public class AdController {
         if(adminId==null){
             return ResponseUtil.fail(668,"管理员未登录");
         }
-        Ad targetAd=adService.getAdById(id);
         if(id==null||id<=0){
-            return ResponseUtil.fail(682,"修改广告失败");
+            return ResponseUtil.fail(580,"参数不合法");
         }
+        Ad targetAd=adService.getAdById(id);
         String ip=request.getHeader("ip");
         if(targetAd.getStartTime()!=null&&targetAd.getEndTime()!=null){
             if(targetAd.getStartTime().isAfter(targetAd.getEndTime())){
@@ -149,7 +155,7 @@ public class AdController {
         }
         String ip=request.getHeader("ip");
         if(id==null||id<=0){
-            return ResponseUtil.fail(683,"删除广告失败");
+            return ResponseUtil.fail(580,"参数不合法");
         }
         boolean success=adService.deleteAdById(id);
         if(success){

@@ -119,5 +119,6 @@
         <module>ad</module>
         <module>topic</module>
         <module>log</module>
+        <module>zuul</module>
     </modules>
 </project>

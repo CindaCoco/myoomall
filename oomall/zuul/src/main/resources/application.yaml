@@ -1,0 +1,21 @@
+server:
+  port: 9527
+
+spring:
+  application:
+    name: zuul-gateway
+  datasource:
+    username: oomallUser
+    password: 123456
+    url: jdbc:mysql://handsomeyida.xyz:3306/oomall?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
+
+zuul:
+  routes:
+    myad.serviceId: adservice
+    myad.path: /myad/**
+  ignored-services: adservice

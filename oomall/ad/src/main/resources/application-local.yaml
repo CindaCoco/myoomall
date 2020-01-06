@@ -1,0 +1,39 @@
+server:
+  port: 8002
+
+spring:
+  application:
+    name: adService
+  datasource:
+    username: oomallUser
+    password: 123456
+    url: jdbc:mysql://handsomeyida.xyz:3306/oomall?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=GMT%2B8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: xmu.yida.ad.domain
+  configuration:
+    map-underscore-to-camel-case: true
+#showSql
+logging:
+  level:
+    com:
+      example:
+        mapper : debug
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: adService8002-hystrix
+    prefer-ip-address: true
+    non-secure-port: 8002
+
+info:
+  app.name: adService
+  company.name: XMU
+  author: LYD
+  build.artifactId: "@project.artifactId@"
+  build.version: "@project.version@"
+
