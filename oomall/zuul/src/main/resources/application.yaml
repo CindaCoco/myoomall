@@ -16,6 +16,7 @@ eureka:
 
 zuul:
   routes:
-    myad.serviceId: adservice
+    myad.serviceId: adService
     myad.path: /myad/**
-  ignored-services: adservice
+  ignored-services: "*"
+  prefix: /xinxindazi
